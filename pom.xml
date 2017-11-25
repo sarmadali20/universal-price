@@ -18,10 +18,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.2.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>io.openshift</groupId>
+        <artifactId>booster-parent</artifactId>
+        <version>13</version>
     </parent>
 
     <groupId>io.openshift.booster</groupId>
@@ -70,15 +69,10 @@
         </dependency>
 
         <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>spring-cloud-starter-kubernetes</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
+            <version>1.3.4</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -87,8 +81,9 @@
 
         <!-- Spring Boot Starters -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <groupId>io.fabric8</groupId>
+            <artifactId>spring-cloud-starter-kubernetes-all</artifactId>
+            <version>0.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -121,6 +116,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.restassured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>2.9.0</version>
             <scope>test</scope>
         </dependency>
 
