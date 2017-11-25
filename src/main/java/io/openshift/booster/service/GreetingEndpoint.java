@@ -15,6 +15,8 @@
  */
 package io.openshift.booster.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.DefaultValue;
@@ -22,6 +24,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+
 
 @Path("/")
 @Component
@@ -35,6 +38,9 @@ public class GreetingEndpoint {
     @GET
     @Path("/greeting")
     @Produces("application/json")
+    @HystrixCommand(fallbackMethod = "helloFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    })
     public Greeting greeting(@QueryParam("name") @DefaultValue("World") String name) {
         String message = String.format(properties.getMessage(), name);
         return new Greeting(message);
