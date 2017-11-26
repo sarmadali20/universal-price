@@ -33,8 +33,8 @@
     <properties>
         <spring-boot.bom.version>1.5.8.Final</spring-boot.bom.version>
         <maven.spring-boot.plugin.version>1.5.8.RELEASE</maven.spring-boot.plugin.version>
-        <hystrix.version>1.5.12</hystrix.version>
         <java.version>1.8</java.version>
+        <hystrix.version>1.5.12</hystrix.version>
     </properties>
 
     <dependencyManagement>
@@ -50,28 +50,12 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>com.netflix.hystrix</groupId>
-            <artifactId>hystrix-core</artifactId>
-            <version>${hystrix.version}</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.netflix.hystrix</groupId>
-            <artifactId>hystrix-javanica</artifactId>
-            <version>${hystrix.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.netflix.hystrix</groupId>
-            <artifactId>hystrix-metrics-event-stream</artifactId>
-            <version>${hystrix.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
-            <version>1.3.4</version>
+            <version>1.3.3</version>
         </dependency>
 
         <dependency>
@@ -92,6 +76,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-ribbon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
+
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -230,4 +219,7 @@
             </dependencies>
         </profile>
     </profiles>
+
+
+
 </project>

@@ -38,11 +38,15 @@ public class GreetingEndpoint {
     @GET
     @Path("/greeting")
     @Produces("application/json")
-    @HystrixCommand(fallbackMethod = "helloFallback", commandProperties = {
+    @HystrixCommand(fallbackMethod = "greetingFallback", commandProperties = {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     })
     public Greeting greeting(@QueryParam("name") @DefaultValue("World") String name) {
         String message = String.format(properties.getMessage(), name);
         return new Greeting(message);
+    }
+
+    public Greeting greetingFallback(@QueryParam("name") @DefaultValue("World") String name) {
+        return new Greeting(name);
     }
 }
