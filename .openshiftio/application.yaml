@@ -111,7 +111,6 @@ objects:
       provider: fabric8
       version: "13"
       group: io.openshift.booster
-      hystrix.enabled: "true"
     name: spring-boot-rest-http
   spec:
     ports:
@@ -123,7 +122,6 @@ objects:
       app: spring-boot-rest-http
       provider: fabric8
       group: io.openshift.booster
-      hystrix.enabled: "true"
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -140,7 +138,6 @@ objects:
       provider: fabric8
       version: "13"
       group: io.openshift.booster
-      hystrix.enabled: "true"
     name: spring-boot-rest-http
   spec:
     replicas: 1
@@ -149,7 +146,6 @@ objects:
       app: spring-boot-rest-http
       provider: fabric8
       group: io.openshift.booster
-      hystrix.enabled: "true"
     strategy:
       rollingParams:
         timeoutSeconds: 3600
@@ -169,7 +165,6 @@ objects:
           provider: fabric8
           version: "13"
           group: io.openshift.booster
-          hystrix.enabled: "true"
       spec:
         containers:
         - env:
