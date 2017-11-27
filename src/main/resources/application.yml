@@ -1,11 +1,9 @@
 spring:
-  zipkin:
-    enabled: true
   sleuth:
     sampler:
       percentage: 1.0
   cloud:
-    openshift:
+    kubernetes:
       zipkin:
         discovery:
           serviceName: zipkin

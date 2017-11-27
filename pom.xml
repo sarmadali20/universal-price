@@ -88,8 +88,8 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zipkin</artifactId>
-            <version>1.2.5.RELEASE</version>
+            <artifactId>spring-cloud-starter-kubernetes-zipkin</artifactId>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
