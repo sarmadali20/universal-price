@@ -1,57 +1,67 @@
 #!/usr/bin/groovy
-@Library('github.com/fabric8io/fabric8-pipeline-library@master')
-def canaryVersion = "1.0.${env.BUILD_NUMBER}"
-def utils = new io.fabric8.Utils()
-def stashName = "buildpod.${env.JOB_NAME}.${env.BUILD_NUMBER}".replace('-', '_').replace('/', '_')
-def envStage = utils.environmentNamespace('stage')
-def envProd = utils.environmentNamespace('run')
+@Library('github.com/fabric8io/fabric8-pipeline-library@v2.2.311')
 
-mavenNode {
-  checkout scm
-  if (utils.isCI()){
-
-    mavenCI{}
-    
-  } else if (utils.isCD()){
-    echo 'NOTE: running pipelines for the first time will take longer as build and base docker images are pulled onto the node'
-    container(name: 'maven') {
-
-      stage('Build Release'){
-        mavenCanaryRelease {
-          version = canaryVersion
-        }
-        //stash deployment manifests
-        stash includes: '**/*.yml', name: stashName
-      }
-
-      stage('Rollout to Stage'){
-        apply{
-          environment = envStage
-        }
-      }
-    }
-  }
+def localItestPattern = ""
+try {
+  localItestPattern = ITEST_PATTERN
+} catch (Throwable e) {
+  localItestPattern = "*KT"
 }
 
-if (utils.isCD()){
-  node {
-    stage('Approve'){
-       approve {
-         room = null
-         version = canaryVersion
-         environment = 'Stage'
-       }
-     }
-  }
+def localFailIfNoTests = ""
+try {
+  localFailIfNoTests = ITEST_FAIL_IF_NO_TEST
+} catch (Throwable e) {
+  localFailIfNoTests = "false"
+}
 
-  clientsNode{
-    container(name: 'clients') {
-      stage('Rollout to Run'){
-        unstash stashName
-        apply{
-          environment = envProd
-        }
-      }
+def versionPrefix = ""
+try {
+  versionPrefix = VERSION_PREFIX
+} catch (Throwable e) {
+  versionPrefix = "1.0"
+}
+
+def canaryVersion = "${versionPrefix}.${env.BUILD_NUMBER}"
+
+def fabric8Console = "${env.FABRIC8_CONSOLE ?: ''}"
+def utils = new io.fabric8.Utils()
+def label = "buildpod.${env.JOB_NAME}.${env.BUILD_NUMBER}".replace('-', '_').replace('/', '_')
+
+mavenNode{
+  def envStage = utils.environmentNamespace('staging')
+  def envProd = utils.environmentNamespace('production')
+
+  git 'http://gogs/gogsadmin/current-weather-obs-service.git'
+
+  echo 'NOTE: running pipelines for the first time will take longer as build and base docker images are pulled onto the node'
+  container(name: 'maven') {
+
+    stage 'Build Release'
+    mavenCanaryRelease {
+      version = canaryVersion
     }
+
+    stage 'Integration Testing'
+    mavenIntegrationTest {
+      environment = 'Testing'
+      failIfNoTests = localFailIfNoTests
+      itestPattern = localItestPattern
+    }
+
+    stage 'Rollout Staging'
+    kubernetesApply(environment: envStage)
+
+    stage 'Approve'
+    approve {
+      room = null
+      version = canaryVersion
+      console = fabric8Console
+      environment = 'Staging'
+    }
+
+    stage 'Rollout Production'
+    kubernetesApply(environment: envProd)
+
   }
 }
